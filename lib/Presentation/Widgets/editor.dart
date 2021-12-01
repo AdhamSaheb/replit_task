@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:code_editor/code_editor.dart';
 import 'package:replit/Constants/colors.dart';
 import 'package:replit/Constants/editor_theme.dart';
+import 'package:replit/Editor-Package/code_editor.dart';
 
 // Code Snipper Editor Widget
 class Editor extends StatefulWidget {
+  // TODO : PASS CALLBACK and Content
   const Editor({Key? key}) : super(key: key);
 
   @override
@@ -22,7 +23,9 @@ def check_for_file():
     print("Does file exist:", path.exists("data.csv"))
 
 if __name__=="__main__":
-    check_for_file()'''),
+    check_for_file()
+    
+    '''),
     ], // the files created above
     // style customization
     styleOptions: EditorModelStyleOptions(
@@ -38,7 +41,8 @@ if __name__=="__main__":
         toolbarOptions: const ToolbarOptions(
             copy: true, cut: true, paste: true, selectAll: true),
         editButtonName: 'Modify',
-        textStyleOfTextField: editorTextFieldStyle),
+        textStyleOfTextField: editorTextFieldStyle,
+        editorBorderColor: Colors.white),
   );
 
   EditorModelStyleOptions ops = EditorModelStyleOptions();

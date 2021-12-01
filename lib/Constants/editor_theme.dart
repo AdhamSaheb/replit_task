@@ -50,7 +50,5 @@ const myEditorTheme = {
   'emphasis': TextStyle(fontStyle: FontStyle.italic),
 };
 
-const TextStyle editorTextFieldStyle = TextStyle(
-    backgroundColor: darkGreen,
-    color: Colors.white,
-    decorationColor: Colors.black);
+const TextStyle editorTextFieldStyle =
+    TextStyle(color: Colors.white, fontFamily: 'Ubuntu', height: 1.5);
