@@ -4,6 +4,7 @@ import 'package:replit/Constants/logos.dart';
 import 'package:replit/Constants/people.dart';
 import 'package:replit/Constants/textStyles.dart';
 import 'package:replit/Presentation/Widgets/console.dart';
+import 'package:replit/Presentation/Widgets/editor.dart';
 import 'package:replit/Presentation/Widgets/editor_action_button.dart';
 
 class Repl extends StatefulWidget {
@@ -14,6 +15,8 @@ class Repl extends StatefulWidget {
 }
 
 class _ReplState extends State<Repl> {
+  TextEditingController editorController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -25,28 +28,18 @@ class _ReplState extends State<Repl> {
             child: Console(
           content: "Hello World !",
         )),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            const Expanded(flex: 2, child: Menu()),
-            // Header
-            Expanded(
-              flex: 2,
-              child: Header(width: width),
-            ),
-            // Editor
-            Expanded(
-              flex: 25,
-              child: Container(
-                color: Colors.amber,
-              ),
-            ),
-            // Footer
-            const Expanded(
-              flex: 2,
-              child: Footer(),
-            )
-          ],
+        body: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              const Menu(),
+              // Header
+              Header(width: width),
+              // Editor
+              Editor()
+              //RichCodeEditor(),
+            ],
+          ),
         ),
       ),
     );

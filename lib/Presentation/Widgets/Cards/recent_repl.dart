@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:replit/Constants/colors.dart';
 import 'package:replit/Constants/textStyles.dart';
 import 'package:replit/Data/Models/recent_repl.dart';
-import 'package:replit/Presentation/Pages/repl.dart';
+import 'package:replit/Presentation/Pages/repl/repl.dart';
 
 // Recent Repl Card
 class RecentReplCard extends StatelessWidget {
