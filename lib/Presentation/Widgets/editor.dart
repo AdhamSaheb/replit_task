@@ -5,6 +5,9 @@ import 'package:flutter_highlight/flutter_highlight.dart';
 import 'package:replit/Constants/colors.dart';
 import 'package:replit/Constants/editor_theme.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:replit/Constants/toast.dart';
+import 'package:replit/Constants/toolButton.dart';
+import 'package:replit/Utils/text_field_utils.dart';
 
 // Code Snipper Editor Widget
 class Editor extends StatefulWidget {
@@ -21,45 +24,205 @@ class Editor extends StatefulWidget {
 }
 
 class _EditorState extends State<Editor> {
+  String? value;
+
+  @override
+  void initState() {
+    super.initState();
+    value = widget.controller.text;
+  }
+
   @override
   Widget build(BuildContext context) {
+    /// Add a particular string where the cursor is in the text field.
+    /// * [str] the string to insert
+    /// * [diff] by default, the the cursor is placed after the string placed, but you can change this (Exemple: -1 for "" placed)
+    void insertIntoTextField(
+        String str, TextEditingController editingController,
+        {int diff = 0}) {
+      // get the position of the cursor in the text field
+      int pos = editingController.selection.baseOffset;
+      // get the current text of the text field
+      String baseText = editingController.text;
+      // get the string : 0 -> pos of the current text and add the wanted string
+      String begin = baseText.substring(0, pos) + str;
+      // if we are already in the end of the string
+      if (baseText.length == pos) {
+        editingController.text = begin;
+      } else {
+        // get the end of the string and update the text of the text field
+        String end = baseText.substring(pos, baseText.length);
+        editingController.text = begin + end;
+      }
+      // Copy changes to syntax highligher
+      setState(() {
+        value = widget.controller.text;
+      });
+
+      placeCursor(pos + str.length + diff, editingController);
+    }
+
+    // Function to build the toolbar
+    Widget toolBar(TextEditingController controller) {
+      List<ToolButton> toolButtons = [
+        ToolButton(
+          press: () => insertIntoTextField("    ", widget.controller),
+          icon: FontAwesomeIcons.indent,
+        ),
+        ToolButton(
+          press: () => {insertIntoTextField("<", widget.controller)},
+          icon: FontAwesomeIcons.chevronLeft,
+        ),
+        ToolButton(
+          press: () => insertIntoTextField(">", widget.controller),
+          icon: FontAwesomeIcons.chevronRight,
+        ),
+        ToolButton(
+          press: () => insertIntoTextField('""', widget.controller, diff: -1),
+          icon: FontAwesomeIcons.quoteLeft,
+        ),
+        ToolButton(
+          press: () => insertIntoTextField(":", widget.controller),
+          symbol: ":",
+        ),
+        ToolButton(
+          press: () => insertIntoTextField(";", widget.controller),
+          symbol: ";",
+        ),
+        ToolButton(
+          press: () => insertIntoTextField('()', widget.controller, diff: -1),
+          symbol: "()",
+        ),
+        ToolButton(
+          press: () => insertIntoTextField('{}', widget.controller, diff: -1),
+          symbol: "{}",
+        ),
+        ToolButton(
+          press: () => insertIntoTextField('[]', widget.controller, diff: -1),
+          symbol: "[]",
+        ),
+        ToolButton(
+          press: () => insertIntoTextField(
+            "-",
+            widget.controller,
+          ),
+          icon: FontAwesomeIcons.minus,
+        ),
+        ToolButton(
+          press: () => insertIntoTextField("=", widget.controller),
+          icon: FontAwesomeIcons.equals,
+        ),
+        ToolButton(
+          press: () => insertIntoTextField("+", widget.controller),
+          icon: FontAwesomeIcons.plus,
+        ),
+        ToolButton(
+          press: () => insertIntoTextField("/", widget.controller),
+          icon: FontAwesomeIcons.divide,
+        ),
+        ToolButton(
+          press: () => insertIntoTextField("*", widget.controller),
+          icon: FontAwesomeIcons.times,
+        ),
+        ToolButton(
+            press: () => showFeatureNotAvailableToast(),
+            icon: FontAwesomeIcons.copy),
+        ToolButton(
+            press: () => showFeatureNotAvailableToast(),
+            icon: FontAwesomeIcons.paste),
+      ];
+
+      // Building the Editor
+      return Container(
+        height: 50,
+        width: double.infinity,
+        decoration: const BoxDecoration(
+          color: lightGreen,
+          border: Border(bottom: BorderSide(color: Colors.white, width: 0.5)),
+        ),
+        child: ListView.builder(
+          padding: const EdgeInsets.only(left: 15, top: 8, bottom: 8),
+          itemCount: toolButtons.length,
+          scrollDirection: Axis.horizontal,
+          itemBuilder: (context, int index) {
+            final ToolButton btn = toolButtons[index];
+
+            return Container(
+              width: 55,
+              margin:
+                  const EdgeInsets.only(right: 15), // == padding right above
+              child: TextButton(
+                style: TextButton.styleFrom(
+                  backgroundColor: lightGreen,
+                ),
+                onPressed: btn.press as void Function()?,
+                child: btn.icon == null
+                    ? Text(
+                        btn.symbol ?? "",
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: "monospace",
+                        ),
+                      )
+                    : FaIcon(
+                        btn.icon,
+                        color: Colors.white,
+                        size: 15,
+                      ),
+              ),
+            );
+          },
+        ),
+      );
+    }
+
     return SingleChildScrollView(
-      child: Stack(children: [
-        SizedBox(
-          width: double.infinity,
-          child: HighlightView(
-            widget.controller.text,
-            language: 'python',
-            theme: myEditorTheme,
-            padding: const EdgeInsets.all(12),
-            textStyle: const TextStyle(
-              fontFamily: 'My awesome monospace font',
-              fontSize: 15,
+      child: Column(
+        children: [
+          toolBar(widget.controller),
+          Stack(children: [
+            SizedBox(
+              width: double.infinity,
+              child: HighlightView(
+                value!,
+                language: 'python',
+                theme: myEditorTheme,
+                padding: const EdgeInsets.all(12),
+                textStyle: const TextStyle(
+                  fontFamily: 'My awesome monospace font',
+                  fontSize: 15,
+                ),
+              ),
             ),
-          ),
-        ),
-        Container(
-          color: Colors.transparent,
-          height: 1000,
-          padding: const EdgeInsets.symmetric(horizontal: 13),
-          child: TextField(
-            controller: widget.controller,
-            maxLines: null,
-            style: const TextStyle(
-                color: Colors.transparent,
-                fontSize: 15,
-                fontFamily: 'My awesome monospace font'),
-            cursorColor: Colors.white,
-            onChanged: (val) => setState(() {}),
-            decoration: const InputDecoration(
-              border: InputBorder.none,
+            Container(
+              color: Colors.transparent,
+              height: 1000,
+              padding: const EdgeInsets.symmetric(horizontal: 13),
+              child: TextField(
+                controller: widget.controller,
+                maxLines: null,
+                style: const TextStyle(
+                    color: Colors.transparent,
+                    fontSize: 15,
+                    fontFamily: 'My awesome monospace font'),
+                cursorColor: Colors.white,
+                onChanged: (val) => setState(() {
+                  value = val;
+                }),
+                decoration: const InputDecoration(
+                  border: InputBorder.none,
+                ),
+                keyboardType: TextInputType.multiline,
+              ),
             ),
-            keyboardType: TextInputType.multiline,
-          ),
-        ),
-        // open console button
-        Positioned(right: 0.0, top: 200, child: ConsoleArrow(widget: widget))
-      ]),
+            // open console button
+            Positioned(
+                right: 0.0, top: 200, child: ConsoleArrow(widget: widget))
+          ]),
+        ],
+      ),
     );
   }
 }
@@ -92,3 +255,111 @@ class ConsoleArrow extends StatelessWidget {
     );
   }
 }
+
+/*
+
+    List<ToolButton> toolButtons = [
+      ToolButton(
+        press: () => insertIntoTextField("\t", widget.controller),
+        icon: FontAwesomeIcons.indent,
+      ),
+      ToolButton(
+        press: () =>
+            {insertIntoTextField("<", widget.controller), setState(() {})},
+        icon: FontAwesomeIcons.chevronLeft,
+      ),
+      ToolButton(
+        press: () => insertIntoTextField(">", widget.controller),
+        icon: FontAwesomeIcons.chevronRight,
+      ),
+      ToolButton(
+        press: () => insertIntoTextField('""', widget.controller, diff: -1),
+        icon: FontAwesomeIcons.quoteLeft,
+      ),
+      ToolButton(
+        press: () => insertIntoTextField(":", widget.controller),
+        symbol: ":",
+      ),
+      ToolButton(
+        press: () => insertIntoTextField(";", widget.controller),
+        symbol: ";",
+      ),
+      ToolButton(
+        press: () => insertIntoTextField('()', widget.controller, diff: -1),
+        symbol: "()",
+      ),
+      ToolButton(
+        press: () => insertIntoTextField('{}', widget.controller, diff: -1),
+        symbol: "{}",
+      ),
+      ToolButton(
+        press: () => insertIntoTextField('[]', widget.controller, diff: -1),
+        symbol: "[]",
+      ),
+      ToolButton(
+        press: () => insertIntoTextField(
+          "-",
+          widget.controller,
+        ),
+        icon: FontAwesomeIcons.minus,
+      ),
+      ToolButton(
+        press: () => insertIntoTextField("=", widget.controller),
+        icon: FontAwesomeIcons.equals,
+      ),
+      ToolButton(
+        press: () => insertIntoTextField("+", widget.controller),
+        icon: FontAwesomeIcons.plus,
+      ),
+      ToolButton(
+        press: () => insertIntoTextField("/", widget.controller),
+        icon: FontAwesomeIcons.divide,
+      ),
+      ToolButton(
+        press: () => insertIntoTextField("*", widget.controller),
+        icon: FontAwesomeIcons.times,
+      ),
+    ];
+    return Container(
+      height: 50,
+      width: double.infinity,
+      decoration: const BoxDecoration(
+        color: lightGreen,
+      ),
+      child: ListView.builder(
+        padding: EdgeInsets.only(left: 15, top: 8, bottom: 8),
+        itemCount: toolButtons.length,
+        scrollDirection: Axis.horizontal,
+        itemBuilder: (context, int index) {
+          final ToolButton btn = toolButtons[index];
+
+          return Container(
+            width: 55,
+            margin: EdgeInsets.only(right: 15), // == padding right above
+            child: TextButton(
+              style: TextButton.styleFrom(
+                backgroundColor: lightGreen,
+              ),
+              onPressed: btn.press as void Function()?,
+              child: btn.icon == null
+                  ? Text(
+                      btn.symbol ?? "",
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: "monospace",
+                      ),
+                    )
+                  : FaIcon(
+                      btn.icon,
+                      color: Colors.white,
+                      size: 15,
+                    ),
+            ),
+          );
+        },
+      ),
+    );
+
+ */

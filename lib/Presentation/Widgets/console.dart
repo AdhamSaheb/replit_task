@@ -23,27 +23,44 @@ class _ConsoleState extends State<Console> {
             height: 20,
           ),
           Text(
-            "Console",
+            "Terminal",
             style: bold.copyWith(
-                color: Colors.white, fontSize: 20, fontFamily: 'Ubuntu'),
+              color: Colors.white,
+              fontSize: 16,
+              fontFamily: 'Ubuntu',
+            ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(
-            height: 20,
+            height: 10,
           ),
           const Divider(
             color: Colors.white,
-            thickness: 2,
+            thickness: 1,
           ),
-          Container(
-            padding: const EdgeInsets.all(10),
-            width: double.infinity,
-            child: Text(
-              "Code Run Results: \n\n>>> \n" + widget.content,
-              style: const TextStyle(
-                  color: Colors.white, fontSize: 13, fontFamily: 'Ubuntu'),
-              textAlign: TextAlign.left,
-            ),
+          const SizedBox(
+            height: 10,
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                '\$ py main.py\n',
+                style: TextStyle(
+                  color: Colors.green,
+                  fontSize: 13,
+                  fontFamily: 'Ubuntu',
+                ),
+                textAlign: TextAlign.left,
+              ),
+              Text(
+                '>>> ' + widget.content,
+                style: const TextStyle(
+                    color: Colors.white, fontSize: 13, fontFamily: 'Ubuntu'),
+                textAlign: TextAlign.left,
+              ),
+            ],
           )
         ],
       ),

@@ -10,6 +10,7 @@ import 'package:replit/Presentation/Widgets/console.dart';
 import 'package:replit/Presentation/Widgets/editor.dart';
 import 'package:replit/Presentation/Widgets/editor_action_button.dart';
 import 'package:replit/Presentation/Widgets/loading.dart';
+import 'package:replit/Utils/text_field_utils.dart';
 
 import 'bloc/repl_bloc.dart';
 
@@ -58,9 +59,7 @@ class _ReplState extends State<Repl> {
             if (state is ReplLoaded) {
               editorController.text = state.code;
               // Move cursor to the end of code
-              editorController.selection = TextSelection.fromPosition(
-                  TextPosition(offset: editorController.text.length));
-
+              placeCursorAtTheEnd(editorController);
               return Scaffold(
                 key: _key,
                 backgroundColor: darkGreen,
