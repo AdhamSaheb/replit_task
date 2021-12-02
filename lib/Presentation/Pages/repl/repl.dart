@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:replit/Constants/colors.dart';
 import 'package:replit/Constants/logos.dart';
@@ -77,6 +75,7 @@ class _ReplState extends State<Repl> {
                         controller: editorController,
                         scaffoldKey: _key),
                     // Editor
+
                     Expanded(
                         child: Editor(
                       controller: editorController,

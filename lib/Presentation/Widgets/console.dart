@@ -15,54 +15,60 @@ class _ConsoleState extends State<Console> {
   Widget build(BuildContext context) {
     return Container(
       color: Colors.black,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          const SizedBox(
-            height: 20,
-          ),
-          Text(
-            "Terminal",
-            style: bold.copyWith(
-              color: Colors.white,
-              fontSize: 16,
-              fontFamily: 'Ubuntu',
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            const SizedBox(
+              height: 20,
             ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          const Divider(
-            color: Colors.white,
-            thickness: 1,
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                '\$ py main.py\n',
-                style: TextStyle(
-                  color: Colors.green,
-                  fontSize: 13,
+            Center(
+              child: Text(
+                "Terminal",
+                style: bold.copyWith(
+                  color: Colors.white,
+                  fontSize: 16,
                   fontFamily: 'Ubuntu',
                 ),
-                textAlign: TextAlign.left,
+                textAlign: TextAlign.center,
               ),
-              Text(
-                '>>> ' + widget.content,
-                style: const TextStyle(
-                    color: Colors.white, fontSize: 13, fontFamily: 'Ubuntu'),
-                textAlign: TextAlign.left,
-              ),
-            ],
-          )
-        ],
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            const Divider(
+              color: Colors.white,
+              thickness: 1,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  '\$ py main.py\n',
+                  style: TextStyle(
+                    color: Colors.green,
+                    fontSize: 13,
+                    fontFamily: 'Ubuntu',
+                  ),
+                  textAlign: TextAlign.left,
+                ),
+                Text(
+                  '>>> ' + widget.content,
+                  style: const TextStyle(
+                      color: Colors.white, fontSize: 13, fontFamily: 'Ubuntu'),
+                  textAlign: TextAlign.left,
+                ),
+              ],
+            )
+          ],
+        ),
       ),
     );
   }

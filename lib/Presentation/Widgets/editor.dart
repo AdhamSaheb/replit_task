@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_highlight/flutter_highlight.dart';
 import 'package:replit/Constants/colors.dart';
@@ -149,8 +147,7 @@ class _EditorState extends State<Editor> {
 
             return Container(
               width: 55,
-              margin:
-                  const EdgeInsets.only(right: 15), // == padding right above
+              margin: const EdgeInsets.only(right: 15),
               child: TextButton(
                 style: TextButton.styleFrom(
                   backgroundColor: lightGreen,
@@ -183,43 +180,77 @@ class _EditorState extends State<Editor> {
         children: [
           toolBar(widget.controller),
           Stack(children: [
-            SizedBox(
-              width: double.infinity,
-              child: HighlightView(
-                value!,
-                language: 'python',
-                theme: myEditorTheme,
-                padding: const EdgeInsets.all(12),
-                textStyle: const TextStyle(
-                  fontFamily: 'My awesome monospace font',
-                  fontSize: 15,
+            Padding(
+              padding: const EdgeInsets.only(left: 50),
+              child: SizedBox(
+                width: double.infinity,
+                child: HighlightView(
+                  value!,
+                  language: 'python',
+                  theme: myEditorTheme,
+                  padding: const EdgeInsets.all(12),
+                  textStyle: const TextStyle(
+                    fontFamily: 'My awesome monospace font',
+                    fontSize: 15,
+                  ),
                 ),
               ),
             ),
-            Container(
-              color: Colors.transparent,
-              height: 1000,
-              padding: const EdgeInsets.symmetric(horizontal: 13),
-              child: TextField(
-                controller: widget.controller,
-                maxLines: null,
-                style: const TextStyle(
-                    color: Colors.transparent,
-                    fontSize: 15,
-                    fontFamily: 'My awesome monospace font'),
-                cursorColor: Colors.white,
-                onChanged: (val) => setState(() {
-                  value = val;
-                }),
-                decoration: const InputDecoration(
-                  border: InputBorder.none,
+            Padding(
+              padding: const EdgeInsets.only(left: 50),
+              child: Container(
+                color: Colors.transparent,
+                height: 10000,
+                padding: const EdgeInsets.symmetric(horizontal: 13),
+                child: TextField(
+                  controller: widget.controller,
+                  maxLines: null,
+                  style: const TextStyle(
+                      color: Colors.transparent,
+                      fontSize: 15,
+                      fontFamily: 'My awesome monospace font'),
+                  cursorColor: Colors.white,
+                  onChanged: (val) => setState(() {
+                    value = val;
+                  }),
+                  decoration: const InputDecoration(
+                    border: InputBorder.none,
+                  ),
+                  keyboardType: TextInputType.multiline,
                 ),
-                keyboardType: TextInputType.multiline,
               ),
             ),
             // open console button
             Positioned(
-                right: 0.0, top: 200, child: ConsoleArrow(widget: widget))
+                right: 0.0, top: 200, child: ConsoleArrow(widget: widget)),
+            Positioned(
+                left: 0.0,
+                top: 0,
+                child: Container(
+                  padding: EdgeInsets.only(top: 12),
+                  color: lightGreen,
+                  height: 10000,
+                  width: 50,
+                  child: ListView.builder(
+                      primary: false,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: 1000,
+                      itemBuilder: (BuildContext ctxt, int index) {
+                        return Column(
+                          children: [
+                            Text(
+                              (index + 1).toString(),
+                              style: const TextStyle(
+                                  color: Colors.white, letterSpacing: 1.5),
+                              textAlign: TextAlign.center,
+                            ),
+                            const SizedBox(
+                              height: 2,
+                            )
+                          ],
+                        );
+                      }),
+                )),
           ]),
         ],
       ),
@@ -255,111 +286,3 @@ class ConsoleArrow extends StatelessWidget {
     );
   }
 }
-
-/*
-
-    List<ToolButton> toolButtons = [
-      ToolButton(
-        press: () => insertIntoTextField("\t", widget.controller),
-        icon: FontAwesomeIcons.indent,
-      ),
-      ToolButton(
-        press: () =>
-            {insertIntoTextField("<", widget.controller), setState(() {})},
-        icon: FontAwesomeIcons.chevronLeft,
-      ),
-      ToolButton(
-        press: () => insertIntoTextField(">", widget.controller),
-        icon: FontAwesomeIcons.chevronRight,
-      ),
-      ToolButton(
-        press: () => insertIntoTextField('""', widget.controller, diff: -1),
-        icon: FontAwesomeIcons.quoteLeft,
-      ),
-      ToolButton(
-        press: () => insertIntoTextField(":", widget.controller),
-        symbol: ":",
-      ),
-      ToolButton(
-        press: () => insertIntoTextField(";", widget.controller),
-        symbol: ";",
-      ),
-      ToolButton(
-        press: () => insertIntoTextField('()', widget.controller, diff: -1),
-        symbol: "()",
-      ),
-      ToolButton(
-        press: () => insertIntoTextField('{}', widget.controller, diff: -1),
-        symbol: "{}",
-      ),
-      ToolButton(
-        press: () => insertIntoTextField('[]', widget.controller, diff: -1),
-        symbol: "[]",
-      ),
-      ToolButton(
-        press: () => insertIntoTextField(
-          "-",
-          widget.controller,
-        ),
-        icon: FontAwesomeIcons.minus,
-      ),
-      ToolButton(
-        press: () => insertIntoTextField("=", widget.controller),
-        icon: FontAwesomeIcons.equals,
-      ),
-      ToolButton(
-        press: () => insertIntoTextField("+", widget.controller),
-        icon: FontAwesomeIcons.plus,
-      ),
-      ToolButton(
-        press: () => insertIntoTextField("/", widget.controller),
-        icon: FontAwesomeIcons.divide,
-      ),
-      ToolButton(
-        press: () => insertIntoTextField("*", widget.controller),
-        icon: FontAwesomeIcons.times,
-      ),
-    ];
-    return Container(
-      height: 50,
-      width: double.infinity,
-      decoration: const BoxDecoration(
-        color: lightGreen,
-      ),
-      child: ListView.builder(
-        padding: EdgeInsets.only(left: 15, top: 8, bottom: 8),
-        itemCount: toolButtons.length,
-        scrollDirection: Axis.horizontal,
-        itemBuilder: (context, int index) {
-          final ToolButton btn = toolButtons[index];
-
-          return Container(
-            width: 55,
-            margin: EdgeInsets.only(right: 15), // == padding right above
-            child: TextButton(
-              style: TextButton.styleFrom(
-                backgroundColor: lightGreen,
-              ),
-              onPressed: btn.press as void Function()?,
-              child: btn.icon == null
-                  ? Text(
-                      btn.symbol ?? "",
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: "monospace",
-                      ),
-                    )
-                  : FaIcon(
-                      btn.icon,
-                      color: Colors.white,
-                      size: 15,
-                    ),
-            ),
-          );
-        },
-      ),
-    );
-
- */
