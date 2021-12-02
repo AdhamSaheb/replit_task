@@ -40,7 +40,7 @@ class NavigationTitle extends StatelessWidget {
             child: child,
           ),
           const SizedBox(
-            height: 15,
+            height: 25,
           )
         ],
       ),

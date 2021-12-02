@@ -49,9 +49,18 @@ dev_dependencies:
   flutter_bloc: ^8.0.0
   flutter_spinkit: ^5.1.0
   equatable: ^2.0.3
-  #code_editor: ^1.3.1
   flutter_highlight: ^0.7.0
   font_awesome_flutter: ^9.2.0
+  shared_preferences: ^2.0.9
+  fluttertoast: ^8.0.8
+  flutter_native_splash: ^1.3.2
+  flutter_launcher_icons: "^0.9.2"
+
+
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "Images/Logos/replit.png"
 
 
 
@@ -72,6 +81,8 @@ flutter:
     - Images/
     - Images/Persons/
     - Images/Logos/
+
+
     
   #   - images/a_dot_ham.jpeg
 
@@ -90,6 +101,10 @@ flutter:
     - family: Ubuntu
       fonts:
         - asset: Fonts/Ubuntu_Mono/UbuntuMono-Regular.ttf
+        - asset: Fonts/Ubuntu_Mono/UbuntuMono-Bold.ttf
+        - asset: Fonts/Ubuntu_Mono/UbuntuMono-Italic.ttf
+          style: italic
+
 
   #
   # For details regarding fonts from package dependencies,

@@ -19,9 +19,13 @@ class _ConsoleState extends State<Console> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          const SizedBox(
+            height: 20,
+          ),
           Text(
             "Console",
-            style: bold.copyWith(color: Colors.white, fontSize: 20),
+            style: bold.copyWith(
+                color: Colors.white, fontSize: 20, fontFamily: 'Ubuntu'),
             textAlign: TextAlign.center,
           ),
           const SizedBox(
@@ -35,8 +39,9 @@ class _ConsoleState extends State<Console> {
             padding: const EdgeInsets.all(10),
             width: double.infinity,
             child: Text(
-              ">>> \n" + widget.content,
-              style: const TextStyle(color: Colors.white, fontSize: 13),
+              "Code Run Results: \n\n>>> \n" + widget.content,
+              style: const TextStyle(
+                  color: Colors.white, fontSize: 13, fontFamily: 'Ubuntu'),
               textAlign: TextAlign.left,
             ),
           )

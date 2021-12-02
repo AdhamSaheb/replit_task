@@ -24,3 +24,10 @@ class SubmitCode extends ReplEvent {
   @override
   String toString() => 'SubmitCode {}';
 }
+
+class OpenConsole extends ReplEvent {
+  final GlobalKey<ScaffoldState> key;
+  OpenConsole({required this.key});
+  @override
+  String toString() => 'openConsole {}';
+}
