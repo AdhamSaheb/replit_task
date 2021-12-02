@@ -26,20 +26,20 @@ class _ReplState extends State<Repl> {
         backgroundColor: darkGreen,
         endDrawer: const Drawer(
             child: Console(
-          content: "Hello World !",
+          content: "",
         )),
-        body: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              const Menu(),
-              // Header
-              Header(width: width),
-              // Editor
-              Editor()
-              //RichCodeEditor(),
-            ],
-          ),
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            const Menu(),
+            // Header
+            Header(width: width),
+            // Editor
+            Expanded(
+                child: Editor(
+              controller: editorController,
+            ))
+          ],
         ),
       ),
     );

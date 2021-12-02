@@ -1,72 +1,61 @@
 import 'package:flutter/material.dart';
-import 'package:replit/Constants/colors.dart';
+import 'package:flutter_highlight/flutter_highlight.dart';
 import 'package:replit/Constants/editor_theme.dart';
-import 'package:replit/Editor-Package/code_editor.dart';
 
 // Code Snipper Editor Widget
 class Editor extends StatefulWidget {
-  // TODO : PASS CALLBACK and Content
-  const Editor({Key? key}) : super(key: key);
+  final TextEditingController controller;
+  const Editor({Key? key, required this.controller}) : super(key: key);
 
   @override
   _EditorState createState() => _EditorState();
 }
 
 class _EditorState extends State<Editor> {
-  // Editor controller
-  EditorModel model = EditorModel(
-    files: [
-      FileEditor(name: "main.py", language: "python", code: ''' 
-from os import path
+  String code = '';
 
-def check_for_file():
-    print("Does file exist:", path.exists("data.csv"))
-
-if __name__=="__main__":
-    check_for_file()
-    
-    '''),
-    ], // the files created above
-    // style customization
-    styleOptions: EditorModelStyleOptions(
-        theme: myEditorTheme,
-        fontSize: 13,
-        heightOfContainer: 700,
-        editorColor: darkGreen,
-        fontFamily: "monospace",
-        editorToolButtonColor: lightGreen,
-        editButtonBackgroundColor: lightGreen,
-        editButtonTextColor: Colors.white,
-        // Toolbar
-        toolbarOptions: const ToolbarOptions(
-            copy: true, cut: true, paste: true, selectAll: true),
-        editButtonName: 'Modify',
-        textStyleOfTextField: editorTextFieldStyle,
-        editorBorderColor: Colors.white),
-  );
-
-  EditorModelStyleOptions ops = EditorModelStyleOptions();
-
-  @override
-  void initState() {
-    super.initState();
-    model.styleOptions?.defineEditButtonPosition(top: 5.0, right: 5.0);
-  }
-
-  // A custom TextEditingController.
-  final myController = TextEditingController(text: 'hello!');
   @override
   Widget build(BuildContext context) {
-    return CodeEditor(
-      model: model,
-      edit: true,
-      disableNavigationbar: true, // hide the navigation bar ? by default false
-      onSubmit: doSomething,
-      textEditingController: myController, // optional
+    return SingleChildScrollView(
+      child: Stack(children: [
+        SizedBox(
+          width: double.infinity,
+          child: HighlightView(
+            widget.controller.text,
+            language: 'python',
+            theme: myEditorTheme,
+            padding: const EdgeInsets.all(12),
+            textStyle: const TextStyle(
+              fontFamily: 'My awesome monospace font',
+              fontSize: 15,
+              fontFamilyFallback: ['Ubuntu'],
+            ),
+          ),
+        ),
+        Container(
+          color: Colors.transparent,
+          height: 10000,
+          padding: const EdgeInsets.symmetric(horizontal: 13),
+          child: TextField(
+            controller: widget.controller,
+            maxLines: null,
+            style: const TextStyle(color: Colors.transparent, fontSize: 15),
+            cursorColor: Colors.white,
+            onChanged: (val) => setState(() {
+              code = widget.controller.text;
+            }),
+            decoration: const InputDecoration(
+              border: InputBorder.none,
+            ),
+          ),
+        )
+      ]),
     );
   }
 }
 
-dynamic doSomething(String? language, String? value) {
-  print('submitted');
-}
+
+
+// dynamic doSomething(String? language, String? value) {
+//   print('submitted');
+// }
