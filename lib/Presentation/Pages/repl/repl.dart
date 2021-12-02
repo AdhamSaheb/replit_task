@@ -1,11 +1,20 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:replit/Constants/colors.dart';
 import 'package:replit/Constants/logos.dart';
 import 'package:replit/Constants/people.dart';
 import 'package:replit/Constants/textStyles.dart';
+import 'package:replit/Constants/toast.dart';
 import 'package:replit/Presentation/Widgets/console.dart';
 import 'package:replit/Presentation/Widgets/editor.dart';
 import 'package:replit/Presentation/Widgets/editor_action_button.dart';
+import 'package:replit/Presentation/Widgets/loading.dart';
+import 'package:replit/Utils/text_field_utils.dart';
+
+import 'bloc/repl_bloc.dart';
+
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class Repl extends StatefulWidget {
   const Repl({Key? key}) : super(key: key);
@@ -15,33 +24,72 @@ class Repl extends StatefulWidget {
 }
 
 class _ReplState extends State<Repl> {
-  TextEditingController editorController = TextEditingController();
+  final GlobalKey<ScaffoldState> _key = GlobalKey(); // Create a key
 
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: darkGreen,
-        endDrawer: const Drawer(
-            child: Console(
-          content: "Hello World !",
-        )),
-        body: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              const Menu(),
-              // Header
-              Header(width: width),
-              // Editor
-              Editor()
-              //RichCodeEditor(),
-            ],
-          ),
+    TextEditingController editorController = TextEditingController();
+    return BlocProvider(
+      create: (context) => ReplBloc(),
+      child: SafeArea(
+          child: BlocListener<ReplBloc, ReplState>(
+        listener: (context, state) async {
+          // Open console if run result is not empty
+          if (state is ReplLoaded && state.runResult.isNotEmpty) {
+            await Future.delayed(
+                const Duration(milliseconds: 200),
+                () => {
+                      BlocProvider.of<ReplBloc>(context)
+                          .add(OpenConsole(key: _key))
+                    });
+          }
+        },
+        child: BlocBuilder<ReplBloc, ReplState>(
+          builder: (context, state) {
+            if (state is ReplInitial) {
+              BlocProvider.of<ReplBloc>(context).add(LoadFromLocalStorage());
+            }
+            // Loading State UI
+            if (state is ReplLoading) {
+              return const Scaffold(
+                  backgroundColor: darkGreen, body: Loading());
+            }
+            // Loaded State UI
+            if (state is ReplLoaded) {
+              editorController.text = state.code;
+              // Move cursor to the end of code
+              placeCursorAtTheEnd(editorController);
+              return Scaffold(
+                key: _key,
+                backgroundColor: darkGreen,
+                endDrawer: Drawer(
+                    child: Console(
+                  content: state.runResult,
+                )),
+                body: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    const Menu(),
+                    // Header
+                    Header(
+                        width: width,
+                        controller: editorController,
+                        scaffoldKey: _key),
+                    // Editor
+                    Expanded(
+                        child: Editor(
+                      controller: editorController,
+                      onSlide: () => _key.currentState?.openEndDrawer(),
+                    )),
+                  ],
+                ),
+              );
+            }
+            return Container();
+          },
         ),
-      ),
+      )),
     );
   }
 }
@@ -50,9 +98,13 @@ class Header extends StatelessWidget {
   const Header({
     Key? key,
     required this.width,
+    required this.controller,
+    required this.scaffoldKey,
   }) : super(key: key);
 
   final double width;
+  final TextEditingController controller;
+  final GlobalKey<ScaffoldState> scaffoldKey;
 
   @override
   Widget build(BuildContext context) {
@@ -79,22 +131,6 @@ class Header extends StatelessWidget {
                 ],
               ),
               onTap: () => {}),
-          // Save
-          EditorActionButton(
-              width: width / 6,
-              content: const Icon(
-                Icons.save,
-                color: Colors.white,
-              ),
-              onTap: () => {}),
-          // Scan
-          EditorActionButton(
-              width: width / 6,
-              content: const Icon(
-                Icons.camera_alt,
-                color: Colors.white,
-              ),
-              onTap: () => {}),
           // Download
           EditorActionButton(
               width: width / 6,
@@ -102,7 +138,27 @@ class Header extends StatelessWidget {
                 Icons.save_alt,
                 color: Colors.white,
               ),
-              onTap: () => {}),
+              onTap: () => {showFeatureNotAvailableToast()}),
+
+          // Scan
+          EditorActionButton(
+              width: width / 6,
+              content: const Icon(
+                Icons.camera_alt,
+                color: Colors.white,
+              ),
+              onTap: () => {showFeatureNotAvailableToast()}),
+          // Save
+          EditorActionButton(
+              width: width / 6,
+              content: const Icon(
+                Icons.save,
+                color: Colors.white,
+              ),
+              onTap: () => {
+                    BlocProvider.of<ReplBloc>(context)
+                        .add(SaveCodeToLocalStorage(code: controller.text))
+                  }),
           // Run
           EditorActionButton(
               width: width / 6,
@@ -115,7 +171,15 @@ class Header extends StatelessWidget {
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(100)),
               ),
-              onTap: () => {}),
+              onTap: () => {
+                    if (controller.text.isNotEmpty)
+                      {
+                        BlocProvider.of<ReplBloc>(context)
+                            .add(SubmitCode(code: controller.text))
+                      }
+                    else
+                      {showValidationToast('Code Cannot Be Empty')}
+                  }),
         ],
       ),
     );

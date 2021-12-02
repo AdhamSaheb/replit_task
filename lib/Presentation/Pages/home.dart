@@ -1,7 +1,5 @@
 // ignore_for_file: file_names
 
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:replit/Constants/colors.dart';
@@ -9,6 +7,7 @@ import 'package:replit/Constants/languages.dart';
 import 'package:replit/Constants/logos.dart';
 import 'package:replit/Constants/recent_repls.dart';
 import 'package:replit/Constants/textStyles.dart';
+import 'package:replit/Constants/toast.dart';
 import 'package:replit/Data/Data%20Sources/Remote/python_data_source.dart';
 import 'package:replit/Presentation/Widgets/Cards/language_card.dart';
 import 'package:replit/Presentation/Widgets/Cards/recent_repl.dart';
@@ -79,12 +78,18 @@ class HomeHeader extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Icon(
-            Icons.menu_sharp,
-            color: lightGreen,
+          GestureDetector(
+            onTap: () => showFeatureNotAvailableToast(),
+            child: const Icon(
+              Icons.menu_sharp,
+              color: lightGreen,
+            ),
           ),
-          SizedBox(width: width / 3.9),
-          Image.asset(replitLogo)
+          SizedBox(width: width / 3.7),
+          Image.asset(
+            replitLogo,
+            width: 90,
+          )
         ],
       ),
     );
@@ -119,15 +124,13 @@ class CreateRepl extends StatelessWidget {
     return SizedBox(
       height: 110,
       child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: appLanguages.length,
-        itemBuilder: (BuildContext context, int index) => Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: LanguageCard(
-            language: appLanguages[index],
-          ),
-        ),
-      ),
+          scrollDirection: Axis.horizontal,
+          itemCount: appLanguages.length,
+          itemBuilder: (BuildContext context, int index) => Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: LanguageCard(
+                language: appLanguages[index],
+              ))),
     );
   }
 }
@@ -142,21 +145,24 @@ class GithubButton extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         color: lightPurple.withOpacity(0.8),
         alignment: Alignment.center,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              github,
-              width: 30,
-            ),
-            const SizedBox(
-              width: 10,
-            ),
-            Text(
-              "Connect GitHub Repo",
-              style: bold.copyWith(color: Colors.white),
-            ),
-          ],
+        child: GestureDetector(
+          onTap: () => showFeatureNotAvailableToast(),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                github,
+                width: 30,
+              ),
+              const SizedBox(
+                width: 10,
+              ),
+              Text(
+                "Connect GitHub Repo",
+                style: bold.copyWith(color: Colors.white),
+              ),
+            ],
+          ),
         ));
   }
 }

@@ -2,7 +2,7 @@ part of 'repl_bloc.dart';
 
 abstract class ReplState {}
 
-class ReplInitian extends ReplState {}
+class ReplInitial extends ReplState {}
 
 class ReplLoading extends ReplState {
   @override

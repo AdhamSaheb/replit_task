@@ -18,9 +18,10 @@ const Color titlesColor = Color(0xFFDCDC9D); // titles (function's title)
 
 const myEditorTheme = {
   'root': TextStyle(
-    backgroundColor: darkGreen,
-    color: Color(0xffdddddd),
-  ),
+      fontSize: 16,
+      backgroundColor: darkGreen,
+      color: Color(0xffdddddd),
+      fontWeight: FontWeight.bold),
   'keyword': TextStyle(color: keywordColor),
   'params': TextStyle(color: Color(0xffde935f)),
   'selector-tag': TextStyle(color: attrColor),
@@ -49,6 +50,3 @@ const myEditorTheme = {
   'meta': TextStyle(color: Color(0xff777777)),
   'emphasis': TextStyle(fontStyle: FontStyle.italic),
 };
-
-const TextStyle editorTextFieldStyle =
-    TextStyle(color: Colors.white, fontFamily: 'Ubuntu', height: 1.5);

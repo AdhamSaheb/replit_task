@@ -21,7 +21,7 @@ class RecentReplCard extends StatelessWidget {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(15),
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
           color: lightGreen,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -29,7 +29,7 @@ class RecentReplCard extends StatelessWidget {
             children: [
               Text(
                 repl.title,
-                style: bold.copyWith(color: Colors.white, fontSize: 18),
+                style: bold.copyWith(color: Colors.white, fontSize: 15),
               ),
               const SizedBox(
                 height: 10,
