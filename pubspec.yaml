@@ -104,7 +104,9 @@ flutter:
         - asset: Fonts/Ubuntu_Mono/UbuntuMono-Bold.ttf
         - asset: Fonts/Ubuntu_Mono/UbuntuMono-Italic.ttf
           style: italic
-
+    # - family : MaterialIcons
+    #   fonts:
+    #     - asset: Fonts/MaterialIcons-Regular.ttf
 
   #
   # For details regarding fonts from package dependencies,

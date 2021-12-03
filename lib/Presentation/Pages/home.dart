@@ -12,6 +12,7 @@ import 'package:replit/Data/Data%20Sources/Remote/python_data_source.dart';
 import 'package:replit/Presentation/Widgets/Cards/language_card.dart';
 import 'package:replit/Presentation/Widgets/Cards/recent_repl.dart';
 import 'package:replit/Presentation/Widgets/navigation_title.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 /// First Page Of the Application
 class HomeComponent extends StatefulWidget {
@@ -33,7 +34,8 @@ class HomeComponentState extends State<HomeComponent> {
             padding: const EdgeInsets.all(30.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
+              //crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.max,
               // the main sections of the home page
               children: [
                 const HomeHeader(),
@@ -72,26 +74,25 @@ class HomeHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    return Center(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          GestureDetector(
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        GestureDetector(
             onTap: () => showFeatureNotAvailableToast(),
-            child: const Icon(
-              Icons.menu_sharp,
+            child: const FaIcon(
+              FontAwesomeIcons.bars,
               color: lightGreen,
-            ),
-          ),
-          SizedBox(width: width / 3.7),
-          Image.asset(
-            replitLogo,
-            width: 90,
-          )
-        ],
-      ),
+            )),
+        // SizedBox(width: width / 3.7),
+        Image.asset(
+          replitLogo,
+          width: 80,
+        ),
+        Container(
+          width: 32,
+        )
+      ],
     );
   }
 }

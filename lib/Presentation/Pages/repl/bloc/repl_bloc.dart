@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +19,7 @@ class ReplBloc extends Bloc<ReplEvent, ReplState> {
   ReplBloc() : super(ReplInitial()) {
     // Load code from local storage
     on<LoadFromLocalStorage>((event, emit) async {
+      // Show loading indicator
       emit(ReplLoading());
       try {
         String? code = await _localStorageDataSource.fetchSavedCode();
@@ -34,7 +36,6 @@ class ReplBloc extends Bloc<ReplEvent, ReplState> {
 
     // On save
     on<SaveCodeToLocalStorage>((event, emit) async {
-      // emit(ReplLoading());
       try {
         _localStorageDataSource.saveCode(event.code);
         showSuccessToast('Code Saved');
@@ -46,7 +47,9 @@ class ReplBloc extends Bloc<ReplEvent, ReplState> {
 
     // On code submit
     on<SubmitCode>((event, emit) async {
+      // Show loading indicator
       emit(ReplLoading());
+      log(event.code);
       try {
         // Send Request
         Response res = await _pythonRepo.submitPythonCode(event.code);
@@ -57,11 +60,11 @@ class ReplBloc extends Bloc<ReplEvent, ReplState> {
         }
         // error
         else {
-          emit(ReplLoaded(code: '', runResult: ''));
-          showFailureToast(res.body);
+          emit(ReplLoaded(code: event.code, runResult: ''));
+          showFailureToast('Server Error');
         }
       } catch (e) {
-        emit(ReplLoaded(code: '', runResult: ''));
+        emit(ReplLoaded(code: event.code, runResult: ''));
         showFailureToast('Unknown Error');
       }
     });

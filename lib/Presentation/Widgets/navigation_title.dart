@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:replit/Constants/colors.dart';
 import 'package:replit/Constants/textStyles.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 /// A Widget with a clickable title, with a child view
 class NavigationTitle extends StatelessWidget {
@@ -27,9 +28,10 @@ class NavigationTitle extends StatelessWidget {
                 title,
                 style: boldTitle,
               ),
-              const Icon(
-                Icons.arrow_forward,
+              const FaIcon(
+                FontAwesomeIcons.arrowRight,
                 color: lightGreen,
+                size: 15,
               )
             ],
           ),

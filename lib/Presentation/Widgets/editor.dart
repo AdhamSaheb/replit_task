@@ -32,9 +32,6 @@ class _EditorState extends State<Editor> {
 
   @override
   Widget build(BuildContext context) {
-    /// Add a particular string where the cursor is in the text field.
-    /// * [str] the string to insert
-    /// * [diff] by default, the the cursor is placed after the string placed, but you can change this (Exemple: -1 for "" placed)
     void insertIntoTextField(
         String str, TextEditingController editingController,
         {int diff = 0}) {
@@ -60,13 +57,23 @@ class _EditorState extends State<Editor> {
       placeCursor(pos + str.length + diff, editingController);
     }
 
+    void resetEditor() {
+      widget.controller.clear();
+      // Copy changes to syntax highligher
+      setState(() {
+        value = '';
+      });
+    }
+
     // Function to build the toolbar
     Widget toolBar(TextEditingController controller) {
+      /* Start of Tool Buttons */
       List<ToolButton> toolButtons = [
         ToolButton(
           press: () => insertIntoTextField("    ", widget.controller),
           icon: FontAwesomeIcons.indent,
         ),
+        ToolButton(press: () => {resetEditor()}, symbol: 'CLR'),
         ToolButton(
           press: () => {insertIntoTextField("<", widget.controller)},
           icon: FontAwesomeIcons.chevronLeft,
@@ -129,6 +136,7 @@ class _EditorState extends State<Editor> {
             press: () => showFeatureNotAvailableToast(),
             icon: FontAwesomeIcons.paste),
       ];
+      /* End of Tool Buttons */
 
       // Building the Editor
       return Container(
@@ -175,85 +183,87 @@ class _EditorState extends State<Editor> {
       );
     }
 
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          toolBar(widget.controller),
-          Stack(children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 50),
-              child: SizedBox(
-                width: double.infinity,
-                child: HighlightView(
-                  value!,
-                  language: 'python',
-                  theme: myEditorTheme,
-                  padding: const EdgeInsets.all(12),
-                  textStyle: const TextStyle(
-                    fontFamily: 'My awesome monospace font',
-                    fontSize: 15,
-                  ),
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 50),
-              child: Container(
-                color: Colors.transparent,
-                height: 10000,
-                padding: const EdgeInsets.symmetric(horizontal: 13),
-                child: TextField(
-                  controller: widget.controller,
-                  maxLines: null,
-                  style: const TextStyle(
-                      color: Colors.transparent,
+    return Column(
+      children: [
+        toolBar(widget.controller),
+        Expanded(
+          child: SingleChildScrollView(
+            child: Stack(children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 50),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: HighlightView(
+                    value!,
+                    language: 'python',
+                    theme: myEditorTheme,
+                    padding: const EdgeInsets.all(12),
+                    textStyle: const TextStyle(
+                      fontFamily: 'My awesome monospace font',
                       fontSize: 15,
-                      fontFamily: 'My awesome monospace font'),
-                  cursorColor: Colors.white,
-                  onChanged: (val) => setState(() {
-                    value = val;
-                  }),
-                  decoration: const InputDecoration(
-                    border: InputBorder.none,
+                    ),
                   ),
-                  keyboardType: TextInputType.multiline,
                 ),
               ),
-            ),
-            // open console button
-            Positioned(
-                right: 0.0, top: 200, child: ConsoleArrow(widget: widget)),
-            Positioned(
-                left: 0.0,
-                top: 0,
+              Padding(
+                padding: const EdgeInsets.only(left: 50),
                 child: Container(
-                  padding: EdgeInsets.only(top: 12),
-                  color: lightGreen,
+                  color: Colors.transparent,
                   height: 10000,
-                  width: 50,
-                  child: ListView.builder(
-                      primary: false,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: 1000,
-                      itemBuilder: (BuildContext ctxt, int index) {
-                        return Column(
-                          children: [
-                            Text(
-                              (index + 1).toString(),
-                              style: const TextStyle(
-                                  color: Colors.white, letterSpacing: 1.5),
-                              textAlign: TextAlign.center,
-                            ),
-                            const SizedBox(
-                              height: 2,
-                            )
-                          ],
-                        );
-                      }),
-                )),
-          ]),
-        ],
-      ),
+                  padding: const EdgeInsets.symmetric(horizontal: 13),
+                  child: TextField(
+                    controller: widget.controller,
+                    maxLines: null,
+                    style: const TextStyle(
+                        color: Colors.transparent,
+                        fontSize: 15,
+                        fontFamily: 'My awesome monospace font'),
+                    cursorColor: Colors.white,
+                    onChanged: (val) => setState(() {
+                      value = val;
+                    }),
+                    decoration: const InputDecoration(
+                      border: InputBorder.none,
+                    ),
+                    keyboardType: TextInputType.multiline,
+                  ),
+                ),
+              ),
+              // open console button
+              Positioned(
+                  right: 0.0, top: 200, child: ConsoleArrow(widget: widget)),
+              Positioned(
+                  left: 0.0,
+                  top: 0,
+                  child: Container(
+                    padding: const EdgeInsets.only(top: 12),
+                    color: lightGreen,
+                    height: 10000,
+                    width: 50,
+                    child: ListView.builder(
+                        primary: false,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: 1000,
+                        itemBuilder: (BuildContext ctxt, int index) {
+                          return Column(
+                            children: [
+                              Text(
+                                (index + 1).toString(),
+                                style: const TextStyle(
+                                    color: Colors.white, letterSpacing: 1.5),
+                                textAlign: TextAlign.center,
+                              ),
+                              const SizedBox(
+                                height: 2,
+                              )
+                            ],
+                          );
+                        }),
+                  )),
+            ]),
+          ),
+        ),
+      ],
     );
   }
 }

@@ -20,7 +20,7 @@ class EditorActionButton extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.all(10),
           width: width,
-          child: content,
+          child: Center(child: content),
           decoration: const BoxDecoration(
             color: lightGreen,
             border: Border(

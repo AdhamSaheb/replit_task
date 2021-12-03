@@ -9,6 +9,7 @@ import 'package:replit/Presentation/Widgets/editor.dart';
 import 'package:replit/Presentation/Widgets/editor_action_button.dart';
 import 'package:replit/Presentation/Widgets/loading.dart';
 import 'package:replit/Utils/text_field_utils.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'bloc/repl_bloc.dart';
 
@@ -133,26 +134,29 @@ class Header extends StatelessWidget {
           // Download
           EditorActionButton(
               width: width / 6,
-              content: const Icon(
-                Icons.save_alt,
+              content: const FaIcon(
+                FontAwesomeIcons.download,
                 color: Colors.white,
+                size: 20,
               ),
               onTap: () => {showFeatureNotAvailableToast()}),
 
           // Scan
           EditorActionButton(
               width: width / 6,
-              content: const Icon(
-                Icons.camera_alt,
+              content: const FaIcon(
+                FontAwesomeIcons.camera,
                 color: Colors.white,
+                size: 20,
               ),
               onTap: () => {showFeatureNotAvailableToast()}),
           // Save
           EditorActionButton(
               width: width / 6,
-              content: const Icon(
-                Icons.save,
+              content: const FaIcon(
+                FontAwesomeIcons.save,
                 color: Colors.white,
+                size: 20,
               ),
               onTap: () => {
                     BlocProvider.of<ReplBloc>(context)
@@ -162,13 +166,14 @@ class Header extends StatelessWidget {
           EditorActionButton(
               width: width / 6,
               content: Container(
-                child: const Icon(
-                  Icons.play_arrow,
+                child: const FaIcon(
+                  FontAwesomeIcons.solidPlayCircle,
                   color: Colors.green,
+                  size: 20,
                 ),
                 decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(100)),
+                    borderRadius: BorderRadius.circular(50)),
               ),
               onTap: () => {
                     if (controller.text.isNotEmpty)
@@ -200,7 +205,11 @@ class Menu extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: GestureDetector(
                 onTap: () => {Navigator.pop(context)},
-                child: const Icon(Icons.menu, color: Colors.white)),
+                child: const FaIcon(
+                  FontAwesomeIcons.arrowLeft,
+                  size: 15,
+                  color: Colors.white,
+                )),
           ),
           Padding(
             padding: const EdgeInsets.all(5.0),
@@ -235,14 +244,5 @@ class Menu extends StatelessWidget {
         ],
       ),
     );
-  }
-}
-
-class Footer extends StatelessWidget {
-  const Footer({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container();
   }
 }
